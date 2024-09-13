@@ -8,10 +8,10 @@ import (
 	"strings"
 
 	"chainguard.dev/apko/pkg/log"
+	"github.com/chainguard-dev/cargobump/pkg"
+	"github.com/chainguard-dev/cargobump/pkg/parser"
+	"github.com/chainguard-dev/cargobump/pkg/types"
 	charmlog "github.com/charmbracelet/log"
-	"github.com/hectorj2f/cargobump/pkg"
-	"github.com/hectorj2f/cargobump/pkg/parser"
-	"github.com/hectorj2f/cargobump/pkg/types"
 	"github.com/spf13/cobra"
 	"sigs.k8s.io/release-utils/version"
 )
