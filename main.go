@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"github.com/hectorj2f/cargobump/cmd/cargobump"
+	"github.com/chainguard-dev/cargobump/cmd/cargobump"
 	"log"
 	"os"
 	"os/signal"

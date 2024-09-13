@@ -1,6 +1,6 @@
-module github.com/hectorj2f/cargobump
+module github.com/chainguard-dev/cargobump
 
-go 1.22.6
+go 1.23
 
 require (
 	chainguard.dev/apko v0.17.0

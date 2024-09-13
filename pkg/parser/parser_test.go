@@ -6,7 +6,7 @@ import (
 	"path"
 	"testing"
 
-	"github.com/hectorj2f/cargobump/pkg/types"
+	"github.com/chainguard-dev/cargobump/pkg/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

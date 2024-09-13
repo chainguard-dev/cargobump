@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hectorj2f/cargobump/pkg/run"
-	"github.com/hectorj2f/cargobump/pkg/types"
+	"github.com/chainguard-dev/cargobump/pkg/run"
+	"github.com/chainguard-dev/cargobump/pkg/types"
 	"golang.org/x/mod/semver"
 )
 

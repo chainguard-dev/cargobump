@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/hectorj2f/cargobump/pkg/types"
+	"github.com/chainguard-dev/cargobump/pkg/types"
 	"github.com/samber/lo"
 	"golang.org/x/xerrors"
 	"gopkg.in/yaml.v3"
