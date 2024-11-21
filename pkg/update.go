@@ -2,11 +2,10 @@ package pkg
 
 import (
 	"fmt"
-	"log"
-
 	"github.com/chainguard-dev/cargobump/pkg/run"
 	"github.com/chainguard-dev/cargobump/pkg/types"
 	"golang.org/x/mod/semver"
+	"log"
 )
 
 func Update(patches map[string]*types.Package, pkgs []types.CargoPackage, cargoRoot string) error {
@@ -21,6 +20,19 @@ func Update(patches map[string]*types.Package, pkgs []types.CargoPackage, cargoR
 				return fmt.Errorf("failed to run cargo update '%v' with error: '%v'", output, err)
 			}
 			log.Printf("Package updated successfully: %s to version %s\n", p.Name, v.Version)
+		}
+		// Try updating packages referring to a specific version
+		packageVersion := p.Name + "@" + p.Version
+		v, existsVersionRef := patches[packageVersion]
+		if existsVersionRef {
+			log.Printf("Update package with a specific version: %s\n", packageVersion)
+			if semver.Compare(p.Version, patches[packageVersion].Version) > 0 {
+				return fmt.Errorf("warning: package %s with version '%s' is already at version %s", packageVersion, v.Version, p.Version)
+			}
+			if output, err := run.CargoUpdatePackage(packageVersion, v.Version, cargoRoot); err != nil {
+				return fmt.Errorf("failed to run cargo update '%v' with error: '%v'", output, err)
+			}
+			log.Printf("Package updated successfully: %s to version %s\n", packageVersion, v.Version)
 		}
 	}
 	return nil
