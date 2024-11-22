@@ -1,11 +1,17 @@
+/*
+Copyright 2024 Chainguard, Inc.
+SPDX-License-Identifier: Apache-2.0
+*/
+
 package main
 
 import (
 	"context"
-	"github.com/chainguard-dev/cargobump/cmd/cargobump"
 	"log"
 	"os"
 	"os/signal"
+
+	"github.com/chainguard-dev/cargobump/cmd/cargobump"
 )
 
 func main() {

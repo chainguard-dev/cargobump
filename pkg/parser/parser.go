@@ -1,3 +1,8 @@
+/*
+Copyright 2024 Chainguard, Inc.
+SPDX-License-Identifier: Apache-2.0
+*/
+
 package parser
 
 import (
@@ -8,10 +13,11 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/chainguard-dev/cargobump/pkg/types"
 	"github.com/samber/lo"
 	"golang.org/x/xerrors"
 	"gopkg.in/yaml.v3"
+
+	"github.com/chainguard-dev/cargobump/pkg/types"
 )
 
 type cargoLockPackage struct {

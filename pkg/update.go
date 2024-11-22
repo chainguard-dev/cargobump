@@ -1,11 +1,18 @@
+/*
+Copyright 2024 Chainguard, Inc.
+SPDX-License-Identifier: Apache-2.0
+*/
+
 package pkg
 
 import (
 	"fmt"
+	"log"
+
+	"golang.org/x/mod/semver"
+
 	"github.com/chainguard-dev/cargobump/pkg/run"
 	"github.com/chainguard-dev/cargobump/pkg/types"
-	"golang.org/x/mod/semver"
-	"log"
 )
 
 func Update(patches map[string]*types.Package, pkgs []types.CargoPackage, cargoRoot string) error {

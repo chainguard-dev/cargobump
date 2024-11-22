@@ -1,3 +1,8 @@
+/*
+Copyright 2024 Chainguard, Inc.
+SPDX-License-Identifier: Apache-2.0
+*/
+
 package cargobump
 
 import (
@@ -8,12 +13,13 @@ import (
 	"strings"
 
 	"chainguard.dev/apko/pkg/log"
-	"github.com/chainguard-dev/cargobump/pkg"
-	"github.com/chainguard-dev/cargobump/pkg/parser"
-	"github.com/chainguard-dev/cargobump/pkg/types"
 	charmlog "github.com/charmbracelet/log"
 	"github.com/spf13/cobra"
 	"sigs.k8s.io/release-utils/version"
+
+	"github.com/chainguard-dev/cargobump/pkg"
+	"github.com/chainguard-dev/cargobump/pkg/parser"
+	"github.com/chainguard-dev/cargobump/pkg/types"
 )
 
 type rootCLIFlags struct {
