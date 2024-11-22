@@ -1,3 +1,8 @@
+/*
+Copyright 2024 Chainguard, Inc.
+SPDX-License-Identifier: Apache-2.0
+*/
+
 package parser
 
 import (
@@ -6,9 +11,10 @@ import (
 	"path"
 	"testing"
 
-	"github.com/chainguard-dev/cargobump/pkg/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/chainguard-dev/cargobump/pkg/types"
 )
 
 var (

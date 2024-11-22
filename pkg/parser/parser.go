@@ -1,3 +1,8 @@
+/*
+Copyright 2024 Chainguard, Inc.
+SPDX-License-Identifier: Apache-2.0
+*/
+
 package parser
 
 import (
@@ -8,10 +13,11 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/chainguard-dev/cargobump/pkg/types"
 	"github.com/samber/lo"
 	"golang.org/x/xerrors"
 	"gopkg.in/yaml.v3"
+
+	"github.com/chainguard-dev/cargobump/pkg/types"
 )
 
 type cargoLockPackage struct {
@@ -38,23 +44,29 @@ type PackageList struct {
 
 func (pa *Parser) ParseBumpFile(r io.Reader) (map[string]*types.Package, error) {
 	bytes, _ := io.ReadAll(r)
-	patches := map[string]*types.Package{}
+	var patches map[string]*types.Package
 	var packageList PackageList
+
 	if err := yaml.Unmarshal(bytes, &packageList); err != nil {
 		return patches, fmt.Errorf("unmarshaling file: %w", err)
 	}
+
 	for i, p := range packageList.Packages {
 		if p.Name == "" {
 			return patches, fmt.Errorf("invalid package spec at [%d], missing name", i)
 		}
+
 		if p.Version == "" {
 			return patches, fmt.Errorf("invalid package spec at [%d], missing version", i)
 		}
+
 		if patches == nil {
 			patches = make(map[string]*types.Package, 1)
 		}
+
 		patches[p.Name] = &packageList.Packages[i]
 	}
+
 	return patches, nil
 }
 
@@ -65,16 +77,16 @@ func (pa *Parser) ParseCargoLock(r io.Reader) ([]types.CargoPackage, error) {
 		return nil, xerrors.Errorf("decode error: %w", err)
 	}
 
-	//if _, err := r.Seek(0, io.SeekStart); err != nil {
+	// if _, err := r.Seek(0, io.SeekStart); err != nil {
 	//	return nil, nil, xerrors.Errorf("seek error: %w", err)
-	//}
+	// }
 
 	// We need to get version for unique dependencies for lockfile v3 from lockfile.Packages
 	pkgs := lo.SliceToMap(lockfile.Packages, func(pkg cargoLockPackage) (string, cargoLockPackage) {
 		return pkg.Name, pkg
 	})
 
-	var ps []types.CargoPackage
+	ps := make([]types.CargoPackage, 0, len(lockfile.Packages))
 	for _, pkg := range lockfile.Packages {
 		pkgID := packageID(pkg.Name, pkg.Version)
 		p := types.CargoPackage{
@@ -87,8 +99,10 @@ func (pa *Parser) ParseCargoLock(r io.Reader) ([]types.CargoPackage, error) {
 		if len(deps) > 0 {
 			p.Dependencies = append(p.Dependencies, deps...)
 		}
+
 		ps = append(ps, p)
 	}
+
 	sortCargoPkgs(ps)
 	return ps, nil
 }
@@ -99,7 +113,7 @@ func sortCargoPkgs(pkgs []types.CargoPackage) {
 	})
 }
 
-func parseDependencies(pkgId string, pkg cargoLockPackage, pkgs map[string]cargoLockPackage) []string {
+func parseDependencies(_ string, pkg cargoLockPackage, pkgs map[string]cargoLockPackage) []string {
 	var dependOn []string
 
 	for _, pkgDep := range pkg.Dependencies {
@@ -127,6 +141,7 @@ func parseDependencies(pkgId string, pkg cargoLockPackage, pkgs map[string]cargo
 			continue
 		}
 	}
+
 	return dependOn
 }
 

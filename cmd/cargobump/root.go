@@ -1,3 +1,8 @@
+/*
+Copyright 2024 Chainguard, Inc.
+SPDX-License-Identifier: Apache-2.0
+*/
+
 package cargobump
 
 import (
@@ -8,12 +13,13 @@ import (
 	"strings"
 
 	"chainguard.dev/apko/pkg/log"
-	"github.com/chainguard-dev/cargobump/pkg"
-	"github.com/chainguard-dev/cargobump/pkg/parser"
-	"github.com/chainguard-dev/cargobump/pkg/types"
 	charmlog "github.com/charmbracelet/log"
 	"github.com/spf13/cobra"
 	"sigs.k8s.io/release-utils/version"
+
+	"github.com/chainguard-dev/cargobump/pkg"
+	"github.com/chainguard-dev/cargobump/pkg/parser"
+	"github.com/chainguard-dev/cargobump/pkg/types"
 )
 
 type rootCLIFlags struct {
@@ -32,11 +38,12 @@ func New() *cobra.Command {
 		Use:   "cargobump <file-to-bump>",
 		Short: "cargobump cli",
 		Args:  cobra.NoArgs,
-		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		PersistentPreRunE: func(_ *cobra.Command, _ []string) error {
 			out, err := log.Writer(logPolicy)
 			if err != nil {
 				return fmt.Errorf("failed to create log writer: %w", err)
 			}
+
 			slog.SetDefault(slog.New(charmlog.NewWithOptions(out, charmlog.Options{ReportTimestamp: true, Level: charmlog.Level(level)})))
 
 			return nil
@@ -44,7 +51,7 @@ func New() *cobra.Command {
 
 		// Uncomment the following line if your bare application
 		// has an action associated with it:
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			if rootFlags.packages == "" && rootFlags.bumpFile == "" {
 				return fmt.Errorf("no packages or bump file provides, use --packages/--bump-file")
 			}
@@ -55,6 +62,7 @@ func New() *cobra.Command {
 			var file *os.File
 			parse := parser.NewParser()
 			var patches map[string]*types.Package
+
 			if rootFlags.bumpFile != "" {
 				var err error
 				file, err = os.Open(rootFlags.bumpFile)
@@ -62,18 +70,22 @@ func New() *cobra.Command {
 					return fmt.Errorf("failed reading file: %w", err)
 				}
 				defer file.Close()
+
 				patches, err = parse.ParseBumpFile(file)
+
 				if err != nil {
 					return fmt.Errorf("failed to parse the bump file: %w", err)
 				}
 			} else {
 				ps := strings.Split(rootFlags.packages, " ")
+
 				for _, pkg := range ps {
 					parts := strings.Split(pkg, "@")
 					if len(parts) != 2 {
-						return fmt.Errorf("Error: Invalid package format. Each package should be in the format <package@version>. Usage: cargobump --packages=\"<package1@version> <package2@version> ...\"")
+						return fmt.Errorf("error: Invalid package format. Each package should be in the format <package@version>. Usage: cargobump --packages=\"<package1@version> <package2@version> ...\"")
 					}
-					patches[parts[0]] = &types.Package{
+
+					patches[parts[0]] = &types.Package{ //nolint: nilderef,staticcheck
 						Name:    parts[0],
 						Version: parts[1],
 					}
@@ -109,5 +121,6 @@ func New() *cobra.Command {
 	flagSet.StringVar(&rootFlags.cargoRoot, "cargoroot", "", "path to the Cargo.lock root")
 	flagSet.StringVar(&rootFlags.packages, "packages", "", "A space-separated list of dependencies to update in form package@version")
 	flagSet.StringVar(&rootFlags.bumpFile, "bump-file", "", "The input file to read dependencies to bump from")
+
 	return cmd
 }
