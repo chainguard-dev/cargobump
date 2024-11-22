@@ -19,6 +19,6 @@ func main() {
 	defer done()
 
 	if err := cargobump.New().ExecuteContext(ctx); err != nil {
-		log.Fatalf("error during command execution: %v", err)
+		log.Fatalf("error during command execution: %v", err) //nolint: gocritic
 	}
 }
