@@ -104,7 +104,7 @@ func New() *cobra.Command {
 			}
 
 			if err = pkg.Update(patches, pkgs, rootFlags.cargoRoot); err != nil {
-				return fmt.Errorf("failed to parse the pom file: %w", err)
+				return fmt.Errorf("failed to update packages: %w", err)
 			}
 
 			return nil
