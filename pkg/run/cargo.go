@@ -18,3 +18,12 @@ func CargoUpdatePackage(name, version, cargoRoot string) (string, error) {
 	}
 	return "", nil
 }
+
+func CargoUpdate(cargoRoot string) (string, error) {
+	cmd := exec.Command("cargo", "update") //nolint:gosec
+	cmd.Dir = cargoRoot
+	if bytes, err := cmd.CombinedOutput(); err != nil {
+		return strings.TrimSpace(string(bytes)), err
+	}
+	return "", nil
+}

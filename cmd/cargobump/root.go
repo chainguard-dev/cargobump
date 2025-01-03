@@ -26,6 +26,7 @@ type rootCLIFlags struct {
 	packages  string
 	bumpFile  string
 	cargoRoot string
+	update    bool
 }
 
 var rootFlags rootCLIFlags
@@ -103,7 +104,7 @@ func New() *cobra.Command {
 				return fmt.Errorf("failed to parse Cargo.lock file: %w", err)
 			}
 
-			if err = pkg.Update(patches, pkgs, rootFlags.cargoRoot); err != nil {
+			if err = pkg.Update(patches, pkgs, rootFlags.cargoRoot, rootFlags.update); err != nil {
 				return fmt.Errorf("failed to update packages: %w", err)
 			}
 
@@ -121,6 +122,7 @@ func New() *cobra.Command {
 	flagSet.StringVar(&rootFlags.cargoRoot, "cargoroot", "", "path to the Cargo.lock root")
 	flagSet.StringVar(&rootFlags.packages, "packages", "", "A space-separated list of dependencies to update in form package@version")
 	flagSet.StringVar(&rootFlags.bumpFile, "bump-file", "", "The input file to read dependencies to bump from")
+	flagSet.BoolVar(&rootFlags.update, "run-update", false, "Run 'cargo update' prior upgrading any dependency")
 
 	return cmd
 }
