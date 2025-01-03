@@ -15,7 +15,14 @@ import (
 	"github.com/chainguard-dev/cargobump/pkg/types"
 )
 
-func Update(patches map[string]*types.Package, pkgs []types.CargoPackage, cargoRoot string) error {
+func Update(patches map[string]*types.Package, pkgs []types.CargoPackage, cargoRoot string, update bool) error {
+	// Run 'cargo update' prior upgrading any dependency
+	if update {
+		log.Printf("Running 'cargo update'...\n")
+		if output, err := run.CargoUpdate(cargoRoot); err != nil {
+			return fmt.Errorf("failed to run 'cargo update' '%v' with error: '%w'", output, err)
+		}
+	}
 	for _, p := range pkgs {
 		v, exists := patches[p.Name]
 		if exists {
