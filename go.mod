@@ -1,7 +1,6 @@
 module github.com/chainguard-dev/cargobump
 
 go 1.23
-
 require (
 	chainguard.dev/apko v0.17.0
 	github.com/BurntSushi/toml v1.4.0
@@ -9,7 +8,7 @@ require (
 	github.com/samber/lo v1.49.1
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
-	golang.org/x/mod v0.23.0
+	golang.org/x/mod v0.24.0
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da
 	gopkg.in/yaml.v3 v3.0.1
 	sigs.k8s.io/release-utils v0.11.0
