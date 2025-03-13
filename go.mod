@@ -1,6 +1,6 @@
 module github.com/chainguard-dev/cargobump
 
-go 1.23
+go 1.24
 
 require (
 	chainguard.dev/apko v0.17.0
