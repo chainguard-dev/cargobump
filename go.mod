@@ -4,7 +4,7 @@ go 1.24
 
 require (
 	chainguard.dev/apko v0.17.0
-	github.com/BurntSushi/toml v1.4.0
+	github.com/BurntSushi/toml v1.5.0
 	github.com/charmbracelet/log v0.4.1
 	github.com/samber/lo v1.49.1
 	github.com/spf13/cobra v1.9.1
