@@ -1,35 +1,50 @@
+version: "2"
+run:
+  issues-exit-code: 1
 linters:
   enable:
     - asciicheck
-    - unused
-    - errcheck
     - errorlint
     - forbidigo
-    - gofmt
-    - goimports
-    - gosec
     - gocritic
+    - gosec
     - importas
+    - misspell
     - prealloc
     - revive
-    - misspell
-    - stylecheck
+    - staticcheck
     - tparallel
     - unconvert
     - unparam
     - whitespace
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - errcheck
+          - forbidigo
+          - gosec
+        path: _test\.go
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
 issues:
-  uniq-by-line: false
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - errcheck
-        - gosec
-        # We want to allow using os.Getenv and os.Setenv in tests because it
-        # might be easier (and needed in some cases)
-        - forbidigo
   max-issues-per-linter: 0
   max-same-issues: 0
-run:
-  issues-exit-code: 1
-  timeout: 10m
+  uniq-by-line: false
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
