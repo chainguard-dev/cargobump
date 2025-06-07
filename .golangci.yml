@@ -17,6 +17,8 @@ linters:
     - unconvert
     - unparam
     - whitespace
+    - nilerr
+    - makezero
   exclusions:
     generated: lax
     presets:
