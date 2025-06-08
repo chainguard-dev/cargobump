@@ -78,18 +78,10 @@ func New() *cobra.Command {
 					return fmt.Errorf("failed to parse the bump file: %w", err)
 				}
 			} else {
-				ps := strings.Split(rootFlags.packages, " ")
-
-				for _, pkg := range ps {
-					parts := strings.Split(pkg, "@")
-					if len(parts) != 2 {
-						return fmt.Errorf("error: Invalid package format. Each package should be in the format <package@version>. Usage: cargobump --packages=\"<package1@version> <package2@version> ...\"")
-					}
-
-					patches[parts[0]] = &types.Package{ //nolint: nilderef,staticcheck
-						Name:    parts[0],
-						Version: parts[1],
-					}
+				var err error
+				patches, err = parsePackageList(rootFlags.packages)
+				if err != nil {
+					return fmt.Errorf("failed to parse package list: %w", err)
 				}
 			}
 
@@ -125,4 +117,23 @@ func New() *cobra.Command {
 	flagSet.BoolVar(&rootFlags.update, "run-update", false, "Run 'cargo update' prior upgrading any dependency")
 
 	return cmd
+}
+
+// parsePackageList converts the package list string into a map of package names to their versions.
+func parsePackageList(pkgs string) (map[string]*types.Package, error) {
+	patches := make(map[string]*types.Package)
+	for _, pkg := range strings.Fields(pkgs) {
+		parts := strings.Split(pkg, "@")
+		if len(parts) != 2 || parts[0] == "" || parts[1] == "" {
+			return nil, fmt.Errorf("invalid package %q, want <name@version>", pkg)
+		}
+		if p, ok := patches[parts[0]]; ok {
+			return nil, fmt.Errorf("duplicate package %s@%s found, already defined as %s@%s", parts[0], parts[1], p.Name, p.Version)
+		}
+		patches[parts[0]] = &types.Package{
+			Name:    parts[0],
+			Version: parts[1],
+		}
+	}
+	return patches, nil
 }
