@@ -6,7 +6,7 @@ require (
 	chainguard.dev/apko v0.17.0
 	github.com/BurntSushi/toml v1.5.0
 	github.com/charmbracelet/log v0.4.2
-	github.com/samber/lo v1.51.0
+	github.com/samber/lo v1.52.0
 	github.com/spf13/cobra v1.10.1
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/mod v0.28.0
