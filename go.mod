@@ -7,7 +7,7 @@ require (
 	github.com/BurntSushi/toml v1.5.0
 	github.com/charmbracelet/log v0.4.2
 	github.com/samber/lo v1.52.0
-	github.com/spf13/cobra v1.10.1
+	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/mod v0.30.0
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da
