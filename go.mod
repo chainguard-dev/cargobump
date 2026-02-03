@@ -3,7 +3,7 @@ module github.com/chainguard-dev/cargobump
 go 1.24.0
 
 require (
-	chainguard.dev/apko v0.17.0
+	chainguard.dev/apko v1.1.3
 	github.com/BurntSushi/toml v1.6.0
 	github.com/charmbracelet/log v0.4.2
 	github.com/samber/lo v1.52.0
