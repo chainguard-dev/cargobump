@@ -7,12 +7,13 @@ package cargobump
 
 import (
 	"fmt"
+	"io"
+	"log"
 	"log/slog"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"chainguard.dev/apko/pkg/log"
 	charmlog "github.com/charmbracelet/log"
 	"github.com/spf13/cobra"
 	"sigs.k8s.io/release-utils/version"
@@ -21,6 +22,53 @@ import (
 	"github.com/chainguard-dev/cargobump/pkg/parser"
 	"github.com/chainguard-dev/cargobump/pkg/types"
 )
+
+type charmLogLevel charmlog.Level
+
+func (l *charmLogLevel) Set(s string) error {
+	level, err := charmlog.ParseLevel(s)
+	if err != nil {
+		return err
+	}
+	*l = charmLogLevel(level)
+	return nil
+}
+func (l *charmLogLevel) String() string { return charmlog.Level(*l).String() }
+func (l *charmLogLevel) Type() string   { return "string" }
+
+func logWriter(targets []string) (io.Writer, error) {
+	if len(targets) == 1 {
+		return writerFromTarget(targets[0])
+	}
+	writers := make([]io.Writer, 0, len(targets))
+	for _, target := range targets {
+		w, err := writerFromTarget(target)
+		if err != nil {
+			return nil, err
+		}
+		writers = append(writers, w)
+	}
+	return io.MultiWriter(writers...), nil
+}
+
+func writerFromTarget(target string) (io.Writer, error) {
+	switch target {
+	case "builtin:stderr":
+		return os.Stderr, nil
+	case "builtin:stdout":
+		return os.Stdout, nil
+	case "builtin:discard":
+		return io.Discard, nil
+	default:
+		if strings.Contains(target, "/") {
+			if err := os.MkdirAll(filepath.Dir(target), 0o755); err != nil {
+				return nil, err
+			}
+		}
+		log.Println("writing log file to", target)
+		return os.OpenFile(target, os.O_RDWR|os.O_CREATE, 0o644)
+	}
+}
 
 type rootCLIFlags struct {
 	packages  string
@@ -33,14 +81,14 @@ var rootFlags rootCLIFlags
 
 func New() *cobra.Command {
 	var logPolicy []string
-	var level log.CharmLogLevel
+	var level charmLogLevel
 
 	cmd := &cobra.Command{
 		Use:   "cargobump <file-to-bump>",
 		Short: "cargobump cli",
 		Args:  cobra.NoArgs,
 		PersistentPreRunE: func(_ *cobra.Command, _ []string) error {
-			out, err := log.Writer(logPolicy)
+			out, err := logWriter(logPolicy)
 			if err != nil {
 				return fmt.Errorf("failed to create log writer: %w", err)
 			}
