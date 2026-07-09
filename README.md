@@ -1,5 +1,8 @@
 # cargobump
 
+> **Deprecated:** cargobump is no longer maintained. Use
+> [omnibump](https://github.com/chainguard-dev/omnibump) instead.
+
 Rust tool to declaratively bump dependencies using cargo.
 
 # Usage
