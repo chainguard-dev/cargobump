@@ -85,7 +85,7 @@ func New() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "cargobump <file-to-bump>",
-		Short: "cargobump cli",
+		Short: "cargobump cli (deprecated, use omnibump instead)",
 		Args:  cobra.NoArgs,
 		PersistentPreRunE: func(_ *cobra.Command, _ []string) error {
 			out, err := logWriter(logPolicy)
@@ -94,6 +94,8 @@ func New() *cobra.Command {
 			}
 
 			slog.SetDefault(slog.New(charmlog.NewWithOptions(out, charmlog.Options{ReportTimestamp: true, Level: charmlog.Level(level)})))
+
+			slog.Warn("cargobump is deprecated and no longer maintained, use omnibump instead: https://github.com/chainguard-dev/omnibump")
 
 			return nil
 		},
